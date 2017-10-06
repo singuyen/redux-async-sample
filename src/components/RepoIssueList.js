@@ -19,32 +19,32 @@ class RepoIssueList extends Component {
           field: 'created_at',
           orderBy: 'desc',
           display: {
-            'asc': 'A->Z',
-            'desc': 'Z->A'
+            'asc': 'old - new',
+            'desc': 'new - old'
           }
         },
         {
           field: 'user.login',
           orderBy: 'asc',
           display: {
-            'asc': 'A->Z',
-            'desc': 'Z->A'
+            'asc': 'A - Z',
+            'desc': 'Z - A'
           }
         },
         {
           field: 'title',
           orderBy: 'asc',
           display: {
-            'asc': 'A->Z',
-            'desc': 'Z->A'
+            'asc': 'A - Z',
+            'desc': 'Z - A'
           }
         },
         {
           field: 'state',
           orderBy: 'asc',
           display: {
-            'asc': 'open->close',
-            'desc': 'close->open'
+            'asc': 'close - open',
+            'desc': 'open - close'
           }
         }
       ]
@@ -72,18 +72,17 @@ class RepoIssueList extends Component {
     const orderStatusByField = find(this.state.sortStatus, {'field': field})
     const currentOrderBy = (orderStatusByField.orderBy === 'desc') ? 'asc' : 'desc'
     
-    this.updateSortStatus(field, currentOrderBy)
-    
+    this.updateSortStatus(field, currentOrderBy)  
     this.props.onSortToggle(field, currentOrderBy)
   }
   
   renderSortButton(field) {
     const orderStatusByField = find(this.state.sortStatus, {'field': field})
-    const currentOrderBy = orderStatusByField.display[orderStatusByField.orderBy]
+    const displayOrderBy = orderStatusByField.display[orderStatusByField.orderBy]
     
     return (
       <button className="label label-default" onClick={() => {this.handleSortToggle(field)}}>
-        {currentOrderBy}
+        {displayOrderBy}
       </button>
     )
   }
@@ -96,6 +95,8 @@ class RepoIssueList extends Component {
   
   renderList() {
     return (
+      <div>
+        <h5>Display first 100 issues on both 'Open' and 'Closed' issues only</h5>
         <table className="table table-striped">
           <tbody>
             <tr>
@@ -110,7 +111,9 @@ class RepoIssueList extends Component {
                 title: get(issue, 'title', ''),
                 author: get(issue, 'user.login', ''),
                 created_at: get(issue, 'created_at', ''),
-                state: get(issue, 'state', '')
+                state: get(issue, 'state', ''),
+                avatar_url: get(issue, 'user.avatar_url', ''),
+                labels: get(issue, 'labels', [])
               }
               
               return (<Issue 
@@ -118,6 +121,7 @@ class RepoIssueList extends Component {
             })}
           </tbody>
         </table>
+      </div>
     )
   }
   
