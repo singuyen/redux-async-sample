@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+
 import orderBy from 'lodash/orderBy'
 import get from 'lodash/get'
 import filter from 'lodash/filter'

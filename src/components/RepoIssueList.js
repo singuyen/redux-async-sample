@@ -124,7 +124,7 @@ class RepoIssueList extends Component {
     return (
       <div>
         {filterByDisplay}
-        <h5>Display first 100 issues on both 'Open' and 'Closed' issues only</h5>
+        <h5>Display first <strong>{this.props.repoIssues.length}</strong> results</h5>
         <button className="btn btn-lg" onClick={this.props.showAll.bind(this)}>Show All</button>
         <hr/>
         <table className="table table-striped">
