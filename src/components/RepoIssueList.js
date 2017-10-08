@@ -77,6 +77,21 @@ class RepoIssueList extends Component {
     this.props.onSortToggle(field, currentOrderBy)
   }
   
+  handleFilterBy(labelName) {
+    this.setState({
+      filterBy: labelName
+    })
+    this.props.onSortByLabel(labelName)
+  }
+  
+  handleShowAll() {
+    this.setState({
+      filterBy: ''
+    })
+    
+    this.props.showAll() 
+  }
+  
   renderSortButton(field) {
     const orderStatusByField = find(this.state.sortStatus, {'field': field})
     const displayOrderBy = orderStatusByField.display[orderStatusByField.orderBy]
@@ -88,25 +103,10 @@ class RepoIssueList extends Component {
     )
   }
   
-  handleFilterBy(labelName) {
-    this.setState({
-      filterBy: labelName
-    })
-    this.props.onSortByLabel(labelName)
-  }
-  
   renderLoading() {
     return (
       <h3>Fetching github issues..</h3>
     )
-  }
-  
-  handleShowAll() {
-    this.setState({
-      filterBy: ''
-    })
-    
-    this.props.showAll() 
   }
   
   renderFilterByLabel() {
