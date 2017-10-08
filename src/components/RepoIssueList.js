@@ -6,8 +6,8 @@ import get from 'lodash/get'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
 
-import Issue from './Issue'
 import { fetchApi } from '../actions'
+import Issue from './Issue'
 
 class RepoIssueList extends Component {
   constructor() {
@@ -47,7 +47,8 @@ class RepoIssueList extends Component {
             'desc': 'open - close'
           }
         }
-      ]
+      ],
+      filterBy: ''
     }
   }
   
@@ -81,10 +82,17 @@ class RepoIssueList extends Component {
     const displayOrderBy = orderStatusByField.display[orderStatusByField.orderBy]
     
     return (
-      <button className="label label-default" onClick={() => {this.handleSortToggle(field)}}>
+      <button className="btn" onClick={() => {this.handleSortToggle(field)}}>
         {displayOrderBy}
       </button>
     )
+  }
+  
+  handleFilterBy(labelName) {
+    this.setState({
+      filterBy: labelName
+    })
+    this.props.onSortByLabel(labelName)
   }
   
   renderLoading() {
@@ -93,10 +101,32 @@ class RepoIssueList extends Component {
     )
   }
   
+  handleShowAll() {
+    this.setState({
+      filterBy: ''
+    })
+    
+    this.props.showAll() 
+  }
+  
+  renderFilterByLabel() {
+    return (
+      <h4>
+        Filtered by Label: <button className="btn" onClick={this.handleShowAll.bind(this)}>{this.state.filterBy} x</button>
+        <hr/>
+      </h4>
+    )
+  }
+  
   renderList() {
+    const filterByDisplay = this.state.filterBy.length ? this.renderFilterByLabel() : null
+    
     return (
       <div>
+        {filterByDisplay}
         <h5>Display first 100 issues on both 'Open' and 'Closed' issues only</h5>
+        <button className="btn btn-lg" onClick={this.props.showAll.bind(this)}>Show All</button>
+        <hr/>
         <table className="table table-striped">
           <tbody>
             <tr>
@@ -113,7 +143,9 @@ class RepoIssueList extends Component {
                 created_at: get(issue, 'created_at', ''),
                 state: get(issue, 'state', ''),
                 avatar_url: get(issue, 'user.avatar_url', ''),
-                labels: get(issue, 'labels', [])
+                labels: get(issue, 'labels', []),
+                onSortByLabel: this.handleFilterBy.bind(this),
+                onSortByState: this.props.onSortByState
               }
               
               return (<Issue 
@@ -126,7 +158,6 @@ class RepoIssueList extends Component {
   }
   
   render() {
-    console.log('Hey', this.props.isFetching)
     return this.props.isFetching ? this.renderLoading() : this.renderList()
   }
 }
@@ -134,7 +165,11 @@ class RepoIssueList extends Component {
 RepoIssueList.propTypes = {
   repoIssues: PropTypes.array,
   isFetching: PropTypes.bool.isRequired,
-  onSortToggle: PropTypes.func.isRequired
+  onSortToggle: PropTypes.func.isRequired,
+  onSortByLabel: PropTypes.func.isRequired,
+  onSortByState: PropTypes.func.isRequired,
+  onFilterReset: PropTypes.func.isRequired,
+  showAll: PropTypes.func.isRequired
 }
 
 export default connect()(RepoIssueList)

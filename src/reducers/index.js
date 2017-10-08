@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
 import repoIssues from './repoIssues'
+import filterBy from './filterBy'
 
 const repoIssueApp = combineReducers({
-  repoIssues
+  repoIssues,
+  filterBy
 })
 
 export default repoIssueApp
