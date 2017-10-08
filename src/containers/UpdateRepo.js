@@ -18,7 +18,7 @@ let UpdateRepo = ({ dispatch }) => {
         github.com/
         <input ref={node => {
           input = node
-        }} placeholder="facebook/react"/>
+        }} placeholder="facebook/jest"/>
         &nbsp;<button type="submit">
           Update Repo
         </button>
